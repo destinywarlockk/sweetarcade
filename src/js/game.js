@@ -20,19 +20,33 @@ class SweetwaterArcade {
   async init() {
     console.log('🎮 Sweetwater Arcade - Initializing...');
     
-    // Load configs
-    await this.loadConfigs();
-    
-    // Initialize stages
-    this.initStages();
-    
-    // Setup event listeners
-    this.setupEventListeners();
-    
-    // Show title screen
-    this.showTitleScreen();
-    
-    console.log('✅ Game initialized successfully');
+    try {
+      // Load configs
+      await this.loadConfigs();
+      
+      // Initialize stages
+      this.initStages();
+      
+      // Setup event listeners
+      this.setupEventListeners();
+      
+      // Show title screen
+      this.showTitleScreen();
+      
+      console.log('✅ Game initialized successfully');
+    } catch (error) {
+      console.error('❌ Game initialization failed:', error);
+      // Show error message to user
+      document.body.innerHTML = `
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #0b0b0f; color: #ffd700; font-family: 'Courier New', monospace; text-align: center;">
+          <div>
+            <h1>🎮 Sweetwater Arcade</h1>
+            <p>Loading error. Please refresh the page.</p>
+            <p style="color: #ff6b6b; font-size: 0.8rem;">${error.message}</p>
+          </div>
+        </div>
+      `;
+    }
   }
   
   async loadConfigs() {
@@ -64,6 +78,8 @@ class SweetwaterArcade {
   }
   
   setupEventListeners() {
+    console.log('🔧 Setting up event listeners...');
+    
     // Keyboard controls
     document.addEventListener('keydown', (e) => {
       this.handleKeyPress(e);
@@ -71,10 +87,16 @@ class SweetwaterArcade {
     
     // Menu button clicks
     document.addEventListener('click', (e) => {
+      console.log('🖱️ Click detected on:', e.target);
       if (e.target.classList.contains('menu-item')) {
+        console.log('✅ Menu item clicked!');
         this.handleMenuClick(e.target);
+      } else {
+        console.log('❌ Not a menu item');
       }
     });
+    
+    console.log('✅ Event listeners set up');
   }
   
   handleKeyPress(e) {
@@ -85,18 +107,24 @@ class SweetwaterArcade {
   }
   
   handleMenuClick(button) {
+    console.log('🖱️ Menu click:', button.dataset.action);
     const action = button.dataset.action;
     
     switch (action) {
       case 'start':
+        console.log('🚀 Starting game...');
         this.startGame();
         break;
       case 'credits':
+        console.log('📜 Showing credits...');
         this.showCredits();
         break;
       case 'back':
+        console.log('🔙 Going back...');
         this.showTitleScreen();
         break;
+      default:
+        console.log('❓ Unknown action:', action);
     }
   }
   
