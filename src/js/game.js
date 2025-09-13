@@ -114,6 +114,17 @@ class SweetwaterArcade {
   }
   
   handleKeyPress(e) {
+    // Handle title screen keyboard shortcuts
+    if (this.currentStage === 'title') {
+      if (e.code === 'Space' || e.code === 'Enter') {
+        e.preventDefault();
+        console.log('⌨️ Keyboard start - Space/Enter pressed');
+        this.startGame();
+        return;
+      }
+    }
+    
+    // Handle stage-specific key presses
     const stage = this.stages[this.currentStage];
     if (stage && stage.handleKeyPress) {
       stage.handleKeyPress(e);
