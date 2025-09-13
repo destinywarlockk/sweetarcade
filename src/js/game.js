@@ -647,7 +647,7 @@ class SalesStage {
     
     // Update awareness for preferred pickups
     if (this.pickup.preferred) {
-      this.game.updateAwareness(0.1);
+      this.game.updateAwareness(0.15);
     }
     
     // Update counters
@@ -696,28 +696,31 @@ class SalesStage {
       this.snake.pop(); // Remove tail to keep same length
     }
     
-    // Lose a small amount of awareness for hitting wall
-    this.game.updateAwareness(-0.05);
+    // Lose a tiny amount of awareness for hitting wall
+    this.game.updateAwareness(-0.02);
     
     console.log('🔄 Hit wall! Snake turned safely.');
   }
   
   handleSelfCollision() {
+    console.log('⚠️ Self collision! Current awareness:', this.game.gameState.awareness);
+    
     // Only game over if awareness is very low (below 0.5)
     if (this.game.gameState.awareness < 0.5) {
+      console.log('💀 Game over due to low awareness:', this.game.gameState.awareness);
       this.gameOver();
       return;
     }
     
     // Otherwise, just lose awareness and continue
-    this.game.updateAwareness(-0.2);
+    this.game.updateAwareness(-0.1);
     
     // Shrink snake by 1 segment as penalty
     if (this.snake.length > 3) {
       this.snake.pop();
     }
     
-    console.log('⚠️ Hit yourself! Lost awareness and shrunk snake.');
+    console.log('⚠️ Hit yourself! Lost awareness and shrunk snake. New awareness:', this.game.gameState.awareness);
   }
   
   updateGameInfo() {
@@ -793,6 +796,8 @@ class SalesStage {
   
   completeStage() {
     console.log('🛒 Sales Stage - Complete!');
+    console.log('🛒 Final score:', this.game.gameState.score);
+    console.log('🛒 Final awareness:', this.game.gameState.awareness);
     
     // Clean up
     if (this.gameLoop) clearInterval(this.gameLoop);
