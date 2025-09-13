@@ -1,0 +1,26 @@
+[
+  {
+    "personaId": "bedroom_producer",
+    "name": "Bedroom Producer",
+    "icon": "personas/bedroom_producer.png",
+    "ctaCategoryUrl": "/c/studio-recording"
+  },
+  {
+    "personaId": "touring_pro",
+    "name": "Touring Pro",
+    "icon": "personas/touring_pro.png",
+    "ctaCategoryUrl": "/c/guitars"
+  },
+  {
+    "personaId": "choir_director",
+    "name": "Choir Director",
+    "icon": "personas/choir_director.png",
+    "ctaCategoryUrl": "/c/live-sound"
+  },
+  {
+    "personaId": "studio_engineer",
+    "name": "Studio Engineer",
+    "icon": "personas/studio_engineer.png",
+    "ctaCategoryUrl": "/c/mixing-monitors"
+  }
+]

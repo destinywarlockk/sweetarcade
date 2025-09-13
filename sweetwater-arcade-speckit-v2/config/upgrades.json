@@ -1,0 +1,48 @@
+[
+  {
+    "id": "speed_patch",
+    "name": "Speed Patch",
+    "desc": "Move faster for 10s",
+    "cost": 0,
+    "effect": {
+      "speedMultiplier": 1.25,
+      "durationMs": 10000
+    }
+  },
+  {
+    "id": "firewall",
+    "name": "Firewall",
+    "desc": "Remove the next obstacle once",
+    "cost": 0,
+    "effect": {
+      "skipNextObstacle": true
+    }
+  },
+  {
+    "id": "rewind",
+    "name": "Rewind",
+    "desc": "Undo the last step/mistake",
+    "cost": 0,
+    "effect": {
+      "rewindSteps": 1
+    }
+  },
+  {
+    "id": "cloud_checkpoint",
+    "name": "Cloud Checkpoint",
+    "desc": "Save spot and restore on fail",
+    "cost": 0,
+    "effect": {
+      "checkpoint": true
+    }
+  },
+  {
+    "id": "optimization",
+    "name": "Optimization",
+    "desc": "Increase score multiplier by 0.2 for this run",
+    "cost": 0,
+    "effect": {
+      "scoreMultiplierBoost": 0.2
+    }
+  }
+]

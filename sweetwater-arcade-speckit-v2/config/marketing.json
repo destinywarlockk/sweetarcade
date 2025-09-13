@@ -1,0 +1,23 @@
+{
+  "baselineMultiplier": 1.2,
+  "introLine": "It\u2019s dangerous to go alone\u2026 take this multiplier!",
+  "theme": {
+    "palette": {
+      "bg": "#0b0b0f",
+      "fg": "#ffffff",
+      "accent": "#ffd700"
+    },
+    "showEventSkin": true
+  },
+  "ctas": [
+    {
+      "slot": "postGame",
+      "text": "Shop Guitar Deals",
+      "url": "/c/guitars",
+      "utm": "utm_source=arcade&utm_medium=game&utm_campaign=campaign"
+    }
+  ],
+  "featureFlags": {
+    "showEventSkin": true
+  }
+}
