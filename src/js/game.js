@@ -161,7 +161,7 @@ class SweetwaterArcade {
     // Reset game state
     this.gameState = {
       score: 0,
-      awareness: this.configs.marketing?.baselineMultiplier || 1.2,
+      awareness: (this.configs.marketing?.baselineMultiplier || 1.2) + 0.5, // Start with extra awareness
       timer: 0,
       currentPersona: null,
       selectedUpgrade: null,
@@ -647,7 +647,7 @@ class SalesStage {
     
     // Update awareness for preferred pickups
     if (this.pickup.preferred) {
-      this.game.updateAwareness(0.15);
+      this.game.updateAwareness(0.2);
     }
     
     // Update counters
@@ -705,15 +705,16 @@ class SalesStage {
   handleSelfCollision() {
     console.log('⚠️ Self collision! Current awareness:', this.game.gameState.awareness);
     
-    // Only game over if awareness is very low (below 0.5)
-    if (this.game.gameState.awareness < 0.5) {
-      console.log('💀 Game over due to low awareness:', this.game.gameState.awareness);
+    // TEMPORARILY DISABLED: Only game over if awareness is extremely low (below 0.1)
+    // This makes the game much more forgiving for normal play
+    if (this.game.gameState.awareness < 0.1) {
+      console.log('💀 Game over due to extremely low awareness:', this.game.gameState.awareness);
       this.gameOver();
       return;
     }
     
     // Otherwise, just lose awareness and continue
-    this.game.updateAwareness(-0.1);
+    this.game.updateAwareness(-0.05);
     
     // Shrink snake by 1 segment as penalty
     if (this.snake.length > 3) {
