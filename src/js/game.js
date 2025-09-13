@@ -799,6 +799,7 @@ class SalesStage {
     console.log('🛒 Sales Stage - Complete!');
     console.log('🛒 Final score:', this.game.gameState.score);
     console.log('🛒 Final awareness:', this.game.gameState.awareness);
+    console.log('🛒 Stack trace:', new Error().stack);
     
     // Clean up
     if (this.gameLoop) clearInterval(this.gameLoop);
@@ -825,10 +826,11 @@ class MerchStage {
   
   start() {
     console.log('📦 Merch Stage (Tetris) - Starting...');
+    console.log('📦 Tetris not implemented yet - going back to title');
     // TODO: Implement Tetris game
     setTimeout(() => {
-      this.game.nextStage();
-    }, 5000);
+      this.game.showTitleScreen();
+    }, 2000);
   }
 }
 
@@ -839,10 +841,11 @@ class ITHubStage {
   
   start() {
     console.log('💻 IT Hub Stage - Starting...');
+    console.log('💻 IT Hub not implemented yet - going back to title');
     // TODO: Implement upgrade selection
     setTimeout(() => {
-      this.game.nextStage();
-    }, 3000);
+      this.game.showTitleScreen();
+    }, 2000);
   }
 }
 
@@ -853,10 +856,11 @@ class WarehouseStage {
   
   start() {
     console.log('🏭 Warehouse Stage (Frogger) - Starting...');
+    console.log('🏭 Frogger not implemented yet - going back to title');
     // TODO: Implement Frogger game
     setTimeout(() => {
-      this.game.nextStage();
-    }, 5000);
+      this.game.showTitleScreen();
+    }, 2000);
   }
 }
 
@@ -867,10 +871,11 @@ class CelebrationStage {
   
   start() {
     console.log('🎉 Celebration Stage - Starting...');
+    console.log('🎉 Celebration not implemented yet - going back to title');
     // TODO: Implement celebration screen
     setTimeout(() => {
       this.game.showTitleScreen();
-    }, 5000);
+    }, 2000);
   }
 }
 
