@@ -456,10 +456,10 @@ class SalesStage {
             Use <kbd>WASD</kbd> or <kbd>Arrow Keys</kbd> to move
           </div>
           <div class="game-over" id="game-over">
-            <h3>Game Over!</h3>
-            <p>You helped the customer find some gear!</p>
+            <h3>Time for a Break!</h3>
+            <p>You helped the customer find lots of gear!</p>
             <div class="ceo-rescue">
-              CEO: "Great job! Let's keep helping customers!"
+              CEO: "Amazing work! Ready to help the next customer?"
             </div>
             <p>Press <kbd>SPACE</kbd> to continue</p>
           </div>
@@ -562,15 +562,15 @@ class SalesStage {
     head.x += this.direction.x;
     head.y += this.direction.y;
     
-    // Check wall collision
+    // Check wall collision - turn snake instead of game over
     if (head.x < 0 || head.x >= this.boardWidth || head.y < 0 || head.y >= this.boardHeight) {
-      this.gameOver();
+      this.handleWallCollision(head);
       return;
     }
     
-    // Check self collision
+    // Check self collision - only game over if awareness is very low
     if (this.snake.some(segment => segment.x === head.x && segment.y === head.y)) {
-      this.gameOver();
+      this.handleSelfCollision();
       return;
     }
     
@@ -615,6 +615,56 @@ class SalesStage {
       clearInterval(this.gameLoop);
       this.startGameLoop();
     }
+  }
+  
+  handleWallCollision(head) {
+    // Turn snake to avoid wall - choose a safe direction
+    const safeDirections = [];
+    
+    // Check which directions are safe
+    if (this.direction.x !== 1) safeDirections.push({ x: -1, y: 0 }); // Left
+    if (this.direction.x !== -1) safeDirections.push({ x: 1, y: 0 }); // Right
+    if (this.direction.y !== 1) safeDirections.push({ x: 0, y: -1 }); // Up
+    if (this.direction.y !== -1) safeDirections.push({ x: 0, y: 1 }); // Down
+    
+    // Choose a random safe direction
+    const newDirection = safeDirections[Math.floor(Math.random() * safeDirections.length)];
+    this.nextDirection = newDirection;
+    
+    // Move head in new direction
+    const newHead = { ...this.snake[0] };
+    newHead.x += newDirection.x;
+    newHead.y += newDirection.y;
+    
+    // Make sure new position is valid
+    if (newHead.x >= 0 && newHead.x < this.boardWidth && 
+        newHead.y >= 0 && newHead.y < this.boardHeight) {
+      this.snake.unshift(newHead);
+      this.snake.pop(); // Remove tail to keep same length
+    }
+    
+    // Lose a small amount of awareness for hitting wall
+    this.game.updateAwareness(-0.05);
+    
+    console.log('🔄 Hit wall! Snake turned safely.');
+  }
+  
+  handleSelfCollision() {
+    // Only game over if awareness is very low (below 0.5)
+    if (this.game.gameState.awareness < 0.5) {
+      this.gameOver();
+      return;
+    }
+    
+    // Otherwise, just lose awareness and continue
+    this.game.updateAwareness(-0.2);
+    
+    // Shrink snake by 1 segment as penalty
+    if (this.snake.length > 3) {
+      this.snake.pop();
+    }
+    
+    console.log('⚠️ Hit yourself! Lost awareness and shrunk snake.');
   }
   
   updateGameInfo() {
