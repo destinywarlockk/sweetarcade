@@ -662,9 +662,10 @@ class SalesStage {
     
     this.spawnPickup();
     
-    // Increase speed slightly (but not too fast)
-    if (this.gameSpeed > 120) {
-      this.gameSpeed -= 3;
+    // Increase speed very gradually (every 5th pickup)
+    if (this.snake.length % 5 === 0 && this.gameSpeed > 150) {
+      console.log('🚀 Speed increase! Snake length:', this.snake.length, 'Speed:', this.gameSpeed);
+      this.gameSpeed -= 5;
       clearInterval(this.gameLoop);
       this.startGameLoop();
     }
