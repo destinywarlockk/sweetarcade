@@ -1,4 +1,17 @@
 // Sweetwater Arcade - Main Game Engine
+// Global error handler to catch any unhandled errors
+window.addEventListener('error', function(event) {
+  console.error('🚨 UNHANDLED ERROR:', event.error);
+  console.error('🚨 Error details:', event.message, 'at', event.filename, 'line', event.lineno);
+  console.trace('🚨 Stack trace for unhandled error:');
+});
+
+// Global unhandled promise rejection handler
+window.addEventListener('unhandledrejection', function(event) {
+  console.error('🚨 UNHANDLED PROMISE REJECTION:', event.reason);
+  console.trace('🚨 Stack trace for unhandled promise rejection:');
+});
+
 class SweetwaterArcade {
   constructor() {
     this.currentStage = 'title';
@@ -154,6 +167,8 @@ class SweetwaterArcade {
   }
   
   showTitleScreen() {
+    console.log('🏠 SweetwaterArcade.showTitleScreen() called');
+    console.trace('🏠 Stack trace for showTitleScreen:');
     this.currentStage = 'title';
     document.querySelector('.title-screen').style.display = 'flex';
     document.querySelector('.game-screen').style.display = 'none';
@@ -186,16 +201,24 @@ class SweetwaterArcade {
   }
   
   nextStage() {
+    console.log('➡️ SweetwaterArcade.nextStage() called');
+    console.log('➡️ Current stage:', this.currentStage);
+    console.trace('➡️ Stack trace for nextStage:');
+    
     const stageOrder = [
       'marketing', 'wildCustomer', 'sales', 'merch', 'itHub', 'warehouse', 'celebration'
     ];
     
     const currentIndex = stageOrder.indexOf(this.currentStage);
+    console.log('➡️ Current index:', currentIndex, 'of', stageOrder.length - 1);
+    
     if (currentIndex < stageOrder.length - 1) {
       this.currentStage = stageOrder[currentIndex + 1];
+      console.log('➡️ Moving to next stage:', this.currentStage);
       this.stages[this.currentStage].start();
     } else {
       // Game complete, back to title
+      console.log('➡️ Game complete - returning to title screen');
       this.showTitleScreen();
     }
   }
@@ -491,6 +514,8 @@ class SalesStage {
   
   start() {
     console.log('🛒 Sales Stage (Snake) - Starting...');
+    console.log('🛒 SalesStage.start() called at:', new Date().toISOString());
+    console.trace('🛒 Stack trace for SalesStage.start:');
     this.startTime = Date.now();
     
     // Create snake game content
@@ -730,6 +755,8 @@ class SalesStage {
   }
   
   gameOver() {
+    console.log('💀 SalesStage.gameOver() called');
+    console.trace('💀 Stack trace for gameOver:');
     this.gameRunning = false;
     clearInterval(this.gameLoop);
     
@@ -740,6 +767,7 @@ class SalesStage {
     this.gameOverKeyHandler = (e) => {
       if (e.code === 'Space') {
         e.preventDefault();
+        console.log('🎮 Space pressed on game over screen - completing stage');
         this.completeStage();
       }
     };
