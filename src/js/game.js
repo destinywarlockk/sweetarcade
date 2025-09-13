@@ -772,7 +772,7 @@ class SalesStage {
         requestAnimationFrame(updateTimer);
       } else {
         // Time's up - just stop the timer, don't end the game
-        console.log('⏰ Time's up! Game continues until you crash...');
+        console.log('Time is up! Game continues until you crash...');
         // Timer stops counting but game keeps running
       }
     };
