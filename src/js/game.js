@@ -411,7 +411,7 @@ class WildCustomerStage {
 class SalesStage {
   constructor(game) {
     this.game = game;
-    this.stageDuration = 60000; // 60 seconds
+    this.stageDuration = 120000; // 2 minutes - more time to play
     this.startTime = 0;
     
     // Snake game properties
@@ -422,7 +422,7 @@ class SalesStage {
     this.nextDirection = { x: 1, y: 0 };
     this.pickup = null;
     this.gameRunning = false;
-    this.gameSpeed = 200; // milliseconds between moves
+    this.gameSpeed = 250; // milliseconds between moves - slightly slower start
     this.gameLoop = null;
     
     // Persona-based pickups
@@ -609,9 +609,9 @@ class SalesStage {
     
     this.spawnPickup();
     
-    // Increase speed slightly
-    if (this.gameSpeed > 100) {
-      this.gameSpeed -= 5;
+    // Increase speed slightly (but not too fast)
+    if (this.gameSpeed > 120) {
+      this.gameSpeed -= 3;
       clearInterval(this.gameLoop);
       this.startGameLoop();
     }
@@ -679,8 +679,10 @@ class SalesStage {
       if (remaining > 0) {
         requestAnimationFrame(updateTimer);
       } else {
-        // Time's up - end stage
-        this.completeStage();
+        // Time's up - but only end if game is still running
+        if (this.gameRunning) {
+          this.gameOver();
+        }
       }
     };
     
