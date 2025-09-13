@@ -51,6 +51,7 @@ class SweetwaterArcade {
   
   async loadConfigs() {
     try {
+      console.log('📁 Loading configs...');
       const [marketing, personas, upgrades] = await Promise.all([
         fetch('./sweetwater-arcade-speckit-v2/config/marketing.json').then(r => r.json()),
         fetch('./sweetwater-arcade-speckit-v2/config/personas.json').then(r => r.json()),
@@ -61,6 +62,19 @@ class SweetwaterArcade {
       console.log('✅ Configs loaded:', this.configs);
     } catch (error) {
       console.error('❌ Failed to load configs:', error);
+      // Use default configs if loading fails
+      this.configs = {
+        marketing: { baselineMultiplier: 1.2, introLine: "Welcome to Sweetwater Arcade!" },
+        personas: [
+          { personaId: 'bedroom_producer', name: 'Bedroom Producer', ctaCategoryUrl: '/c/studio-recording' },
+          { personaId: 'touring_pro', name: 'Touring Pro', ctaCategoryUrl: '/c/guitars' }
+        ],
+        upgrades: [
+          { id: 'speed_patch', name: 'Speed Patch', desc: 'Move faster for 10s' },
+          { id: 'firewall', name: 'Firewall', desc: 'Remove the next obstacle once' }
+        ]
+      };
+      console.log('⚠️ Using default configs due to loading error');
     }
   }
   
