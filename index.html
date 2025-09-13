@@ -3,33 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sweet Arcade</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            background: linear-gradient(135deg, #0b0b0f 0%, #1d4ed8 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Courier New', monospace;
-        }
-        h1 {
-            color: #ffd700;
-            font-size: 4rem;
-            text-shadow: 3px 3px 0px #000;
-            text-align: center;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-        @keyframes glow {
-            from { text-shadow: 3px 3px 0px #000, 0 0 20px #ffd700; }
-            to { text-shadow: 3px 3px 0px #000, 0 0 30px #ffd700, 0 0 40px #ffd700; }
-        }
-    </style>
+    <title>Sweetwater Arcade - Live!</title>
+    <link rel="stylesheet" href="src/css/main.css?v=20250913-1818">
+    <meta name="description" content="Sweetwater Arcade - Help customers find their perfect gear through retro arcade games">
+    <meta name="theme-color" content="#1d4ed8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 </head>
 <body>
-    <h1>🎮 sweetarcade</h1>
-    <p style="color: #ffffff; text-align: center; margin-top: 20px; font-size: 1.2rem;">Webhook test - auto-deployed from GitHub!</p>
+    <div class="game-container">
+        <!-- Title Screen -->
+        <div class="title-screen">
+            <h1 class="game-title">🎮 Sweetwater Arcade</h1>
+            <div class="menu">
+                <button class="menu-item" data-action="start">Start Game</button>
+                <button class="menu-item" data-action="credits">Credits</button>
+            </div>
+            <div class="controls" style="margin-top: 2rem; color: var(--sw-gray); font-size: 0.9rem;">
+                Press <kbd>SPACE</kbd> or <kbd>ENTER</kbd> to start
+            </div>
+        </div>
+        
+        <!-- Game Screen -->
+        <div class="game-screen">
+            <!-- HUD -->
+            <div class="hud">
+                <div class="hud-item timer">
+                    ⏱️ <span class="timer">0s</span>
+                </div>
+                <div class="hud-item">
+                    🎯 Awareness: <div class="awareness-bar"><div class="awareness-fill"></div></div>
+                </div>
+                <div class="hud-item score">
+                    💰 Score: <span class="score">0</span>
+                </div>
+            </div>
+            
+            <!-- Game Area -->
+            <div class="game-area">
+                <div id="stage-content">
+                    <!-- Stage content will be dynamically loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+      console.log('🔍 Testing JavaScript...');
+      console.log('🔍 DOM loaded, about to load game.js');
+    </script>
+    <script src="src/js/game.js?v=20250913-1818"></script>
+    <script>
+      console.log('🔍 game.js loaded, checking if window.game exists...');
+      console.log('🔍 window.game:', window.game);
+    </script>
 </body>
 </html>

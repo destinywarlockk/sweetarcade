@@ -1,0 +1,602 @@
+/* Sweetwater Arcade - Main Styles */
+:root {
+  --sw-blue: #1d4ed8;
+  --sw-gold: #ffd700;
+  --sw-bg: #0b0b0f;
+  --sw-fg: #ffffff;
+  --sw-gray: #6b7280;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Courier New', monospace;
+  background: var(--sw-bg);
+  color: var(--sw-fg);
+  overflow: hidden;
+  height: 100vh;
+}
+
+.game-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title Screen Styles */
+.title-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, var(--sw-bg) 0%, var(--sw-blue) 100%);
+  position: relative;
+}
+
+.title-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230b0b0f"/><rect x="10" y="10" width="80" height="80" fill="%231d4ed8" opacity="0.1"/></svg>');
+  animation: pixelShift 4s ease-in-out infinite;
+}
+
+@keyframes pixelShift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(2px, 2px); }
+}
+
+.game-title {
+  font-size: 4rem;
+  color: var(--sw-gold);
+  text-shadow: 3px 3px 0px #000, 0 0 20px var(--sw-gold);
+  margin-bottom: 2rem;
+  animation: glow 2s ease-in-out infinite alternate;
+  z-index: 1;
+}
+
+@keyframes glow {
+  from { text-shadow: 3px 3px 0px #000, 0 0 20px var(--sw-gold); }
+  to { text-shadow: 3px 3px 0px #000, 0 0 30px var(--sw-gold), 0 0 40px var(--sw-gold); }
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 1;
+}
+
+.menu-item {
+  background: var(--sw-blue);
+  color: var(--sw-fg);
+  border: 2px solid var(--sw-gold);
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.menu-item:hover {
+  background: var(--sw-gold);
+  color: var(--sw-bg);
+  transform: scale(1.05);
+}
+
+.menu-item:active {
+  transform: scale(0.95);
+}
+
+/* Hidden by default */
+.game-screen {
+  display: none;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(29, 78, 216, 0.8);
+  border-bottom: 2px solid var(--sw-gold);
+}
+
+.hud-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.timer {
+  color: var(--sw-gold);
+}
+
+.awareness-bar {
+  width: 200px;
+  height: 20px;
+  background: var(--sw-gray);
+  border: 2px solid var(--sw-fg);
+  position: relative;
+}
+
+.awareness-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--sw-gold) 0%, #ffed4e 100%);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.score {
+  color: var(--sw-gold);
+}
+
+.game-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--sw-bg);
+  position: relative;
+}
+
+/* Marketing Stage Styles */
+.marketing-stage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background: linear-gradient(45deg, var(--sw-bg) 0%, var(--sw-blue) 50%, var(--sw-bg) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.marketing-stage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230b0b0f"/><circle cx="20" cy="20" r="2" fill="%23ffd700" opacity="0.3"/><circle cx="80" cy="30" r="1" fill="%23ffd700" opacity="0.5"/><circle cx="40" cy="70" r="1.5" fill="%23ffd700" opacity="0.4"/></svg>');
+  animation: starfield 8s linear infinite;
+}
+
+@keyframes starfield {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100px); }
+}
+
+.marketing-content {
+  text-align: center;
+  z-index: 1;
+  max-width: 800px;
+  padding: 2rem;
+}
+
+.marketing-title {
+  font-size: 2.5rem;
+  color: var(--sw-gold);
+  text-shadow: 2px 2px 0px #000;
+  margin-bottom: 2rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.text-crawl {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  color: var(--sw-fg);
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: textReveal 3s ease-in-out forwards;
+}
+
+@keyframes textReveal {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.multiplier-gift {
+  background: var(--sw-blue);
+  border: 3px solid var(--sw-gold);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  position: relative;
+  animation: giftGlow 1s ease-in-out infinite alternate;
+}
+
+@keyframes giftGlow {
+  from { box-shadow: 0 0 20px var(--sw-gold); }
+  to { box-shadow: 0 0 40px var(--sw-gold), 0 0 60px var(--sw-gold); }
+}
+
+.multiplier-gift::before {
+  content: '🎁';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-10px); }
+}
+
+.multiplier-text {
+  font-size: 1.5rem;
+  color: var(--sw-gold);
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.multiplier-value {
+  font-size: 3rem;
+  color: var(--sw-gold);
+  font-weight: bold;
+  text-shadow: 2px 2px 0px #000;
+}
+
+.continue-prompt {
+  font-size: 1.1rem;
+  color: var(--sw-gray);
+  margin-top: 2rem;
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+/* Wild Customer Stage Styles */
+.wild-customer-stage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background: radial-gradient(circle, var(--sw-blue) 0%, var(--sw-bg) 70%);
+  position: relative;
+  overflow: hidden;
+}
+
+.wild-customer-stage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230b0b0f"/><polygon points="50,10 60,40 90,40 70,60 80,90 50,70 20,90 30,60 10,40 40,40" fill="%23ffd700" opacity="0.2"/></svg>');
+  animation: sparkle 3s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.1); }
+}
+
+.customer-content {
+  text-align: center;
+  z-index: 1;
+  max-width: 600px;
+  padding: 2rem;
+}
+
+.customer-title {
+  font-size: 2.5rem;
+  color: var(--sw-gold);
+  text-shadow: 2px 2px 0px #000;
+  margin-bottom: 2rem;
+  animation: flash 1s ease-in-out infinite alternate;
+}
+
+@keyframes flash {
+  from { text-shadow: 2px 2px 0px #000, 0 0 20px var(--sw-gold); }
+  to { text-shadow: 2px 2px 0px #000, 0 0 40px var(--sw-gold), 0 0 60px var(--sw-gold); }
+}
+
+.customer-sprite {
+  font-size: 8rem;
+  margin: 2rem 0;
+  animation: zoomIn 1s ease-out, bounce 2s ease-in-out infinite 1s;
+}
+
+@keyframes zoomIn {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.customer-name {
+  font-size: 2rem;
+  color: var(--sw-fg);
+  font-weight: bold;
+  margin-bottom: 1rem;
+  animation: slideUp 1s ease-out 0.5s both;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.customer-description {
+  font-size: 1.2rem;
+  color: var(--sw-gray);
+  margin-bottom: 2rem;
+  animation: slideUp 1s ease-out 1s both;
+}
+
+.customer-cta {
+  background: var(--sw-gold);
+  color: var(--sw-bg);
+  border: 2px solid var(--sw-blue);
+  border-radius: 8px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 1rem 0;
+  animation: slideUp 1s ease-out 1.5s both;
+}
+
+.continue-prompt {
+  font-size: 1.1rem;
+  color: var(--sw-gray);
+  margin-top: 2rem;
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+/* Sales Stage (Snake Game) Styles */
+.sales-stage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background: linear-gradient(135deg, var(--sw-bg) 0%, #1a365d 50%, var(--sw-bg) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.sales-stage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230b0b0f"/><rect x="10" y="10" width="80" height="80" fill="%231a365d" opacity="0.1"/><rect x="20" y="20" width="60" height="60" fill="%23ffd700" opacity="0.05"/></svg>');
+  animation: guitarPattern 6s ease-in-out infinite;
+}
+
+@keyframes guitarPattern {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.05) rotate(1deg); }
+}
+
+.snake-game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+
+.snake-title {
+  font-size: 2rem;
+  color: var(--sw-gold);
+  text-shadow: 2px 2px 0px #000;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.snake-board {
+  width: 600px;
+  height: 400px;
+  background: var(--sw-bg);
+  border: 3px solid var(--sw-gold);
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  gap: 1px;
+}
+
+.snake-segment {
+  background: var(--sw-gold);
+  border-radius: 2px;
+  animation: snakeGlow 0.5s ease-in-out;
+}
+
+@keyframes snakeGlow {
+  0% { box-shadow: 0 0 5px var(--sw-gold); }
+  100% { box-shadow: 0 0 15px var(--sw-gold); }
+}
+
+.snake-head {
+  background: var(--sw-blue);
+  border-radius: 3px;
+  position: relative;
+}
+
+.snake-head::after {
+  content: '👁️';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.8rem;
+}
+
+.pickup {
+  background: var(--sw-gold);
+  border-radius: 50%;
+  animation: pickupPulse 1s ease-in-out infinite;
+  position: relative;
+}
+
+@keyframes pickupPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.pickup::after {
+  content: '🎵';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.8rem;
+}
+
+.pickup-preferred {
+  background: #ff6b6b;
+  animation: preferredPulse 0.8s ease-in-out infinite;
+}
+
+@keyframes preferredPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 10px #ff6b6b; }
+  50% { transform: scale(1.3); box-shadow: 0 0 20px #ff6b6b; }
+}
+
+.pickup-preferred::after {
+  content: '⭐';
+  font-size: 1rem;
+}
+
+.game-info {
+  display: flex;
+  justify-content: space-between;
+  width: 600px;
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: var(--sw-fg);
+}
+
+.controls {
+  text-align: center;
+  margin-top: 1rem;
+  color: var(--sw-gray);
+  font-size: 0.9rem;
+}
+
+.controls kbd {
+  background: var(--sw-blue);
+  color: var(--sw-fg);
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  font-family: inherit;
+}
+
+.game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(11, 11, 15, 0.95);
+  border: 3px solid var(--sw-gold);
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  z-index: 10;
+  display: none;
+}
+
+.game-over h3 {
+  color: var(--sw-gold);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.game-over p {
+  color: var(--sw-fg);
+  margin-bottom: 1rem;
+}
+
+.ceo-rescue {
+  background: var(--sw-blue);
+  border: 2px solid var(--sw-gold);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  animation: rescueGlow 1s ease-in-out infinite alternate;
+}
+
+@keyframes rescueGlow {
+  from { box-shadow: 0 0 15px var(--sw-blue); }
+  to { box-shadow: 0 0 30px var(--sw-blue), 0 0 45px var(--sw-gold); }
+}
+
+.ceo-rescue::before {
+  content: '👔';
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .snake-board {
+    width: 400px;
+    height: 300px;
+    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+  }
+  
+  .game-info {
+    width: 400px;
+    font-size: 0.9rem;
+  }
+  
+  .snake-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .game-title {
+    font-size: 2.5rem;
+  }
+  
+  .menu-item {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .marketing-title {
+    font-size: 2rem;
+  }
+  
+  .text-crawl {
+    font-size: 1.1rem;
+  }
+  
+  .multiplier-gift {
+    padding: 1rem;
+  }
+  
+  .multiplier-value {
+    font-size: 2.5rem;
+  }
+}
