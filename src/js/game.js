@@ -195,29 +195,216 @@ class TitleStage {
 class MarketingStage {
   constructor(game) {
     this.game = game;
+    this.stageDuration = 8000; // 8 seconds total
+    this.startTime = 0;
   }
   
   start() {
     console.log('📢 Marketing Stage - Starting...');
-    // TODO: Implement text crawl and multiplier gift
+    this.startTime = Date.now();
+    
+    // Create marketing stage content
+    const stageContent = document.getElementById('stage-content');
+    stageContent.innerHTML = `
+      <div class="marketing-stage">
+        <div class="marketing-content">
+          <h2 class="marketing-title">🎯 Marketing Mentor</h2>
+          <div class="text-crawl">
+            <p>Welcome to Sweetwater Arcade! You're about to help customers find their perfect gear.</p>
+            <p>Each customer has unique needs - from bedroom producers to touring professionals.</p>
+            <p>Your awareness and skill will guide them to the right solutions.</p>
+          </div>
+          <div class="multiplier-gift">
+            <div class="multiplier-text">Baseline Multiplier Gift</div>
+            <div class="multiplier-value">×${this.game.configs.marketing?.baselineMultiplier || 1.2}</div>
+          </div>
+          <div class="continue-prompt">Press SPACE to continue...</div>
+        </div>
+      </div>
+    `;
+    
+    // Update awareness with baseline multiplier
+    this.game.updateAwareness(0); // This will set it to baseline
+    
+    // Start timer
+    this.startTimer();
+    
+    // Setup keyboard listener for this stage
+    this.setupKeyboardListener();
+  }
+  
+  setupKeyboardListener() {
+    this.keyHandler = (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        this.completeStage();
+      }
+    };
+    document.addEventListener('keydown', this.keyHandler);
+  }
+  
+  startTimer() {
+    const updateTimer = () => {
+      const elapsed = Date.now() - this.startTime;
+      const remaining = Math.max(0, this.stageDuration - elapsed);
+      
+      this.game.gameState.timer = remaining / 1000;
+      this.game.updateHUD();
+      
+      if (remaining > 0) {
+        requestAnimationFrame(updateTimer);
+      } else {
+        // Auto-advance if time runs out
+        this.completeStage();
+      }
+    };
+    
+    requestAnimationFrame(updateTimer);
+  }
+  
+  completeStage() {
+    console.log('📢 Marketing Stage - Complete!');
+    
+    // Remove keyboard listener
+    document.removeEventListener('keydown', this.keyHandler);
+    
+    // Apply baseline multiplier
+    const baselineMultiplier = this.game.configs.marketing?.baselineMultiplier || 1.2;
+    this.game.gameState.awareness = baselineMultiplier;
+    this.game.updateHUD();
+    
+    // Show completion effect
+    const multiplierGift = document.querySelector('.multiplier-gift');
+    if (multiplierGift) {
+      multiplierGift.style.animation = 'giftGlow 0.5s ease-in-out forwards';
+    }
+    
+    // Brief pause then next stage
     setTimeout(() => {
       this.game.nextStage();
-    }, 2000);
+    }, 1500);
+  }
+  
+  handleKeyPress(e) {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      this.completeStage();
+    }
   }
 }
 
 class WildCustomerStage {
   constructor(game) {
     this.game = game;
+    this.stageDuration = 6000; // 6 seconds total
+    this.startTime = 0;
   }
   
   start() {
     console.log('👤 Wild Customer Stage - Starting...');
-    this.game.selectRandomPersona();
-    // TODO: Show customer sprite and flash/zoom
+    this.startTime = Date.now();
+    
+    // Select random persona
+    const persona = this.game.selectRandomPersona();
+    
+    // Create wild customer stage content
+    const stageContent = document.getElementById('stage-content');
+    stageContent.innerHTML = `
+      <div class="wild-customer-stage">
+        <div class="customer-content">
+          <h2 class="customer-title">A wild customer appeared!</h2>
+          <div class="customer-sprite">${this.getPersonaEmoji(persona.personaId)}</div>
+          <div class="customer-name">${persona.name}</div>
+          <div class="customer-description">${this.getPersonaDescription(persona.personaId)}</div>
+          <div class="customer-cta">Needs: ${this.getPersonaNeeds(persona.personaId)}</div>
+          <div class="continue-prompt">Press SPACE to help them...</div>
+        </div>
+      </div>
+    `;
+    
+    // Start timer
+    this.startTimer();
+    
+    // Setup keyboard listener for this stage
+    this.setupKeyboardListener();
+  }
+  
+  getPersonaEmoji(personaId) {
+    const emojis = {
+      'bedroom_producer': '🎵',
+      'touring_pro': '🎸',
+      'choir_director': '🎤',
+      'studio_engineer': '🎛️'
+    };
+    return emojis[personaId] || '🎵';
+  }
+  
+  getPersonaDescription(personaId) {
+    const descriptions = {
+      'bedroom_producer': 'Creating beats in their home studio',
+      'touring_pro': 'Professional musician on the road',
+      'choir_director': 'Leading vocal ensembles',
+      'studio_engineer': 'Crafting perfect recordings'
+    };
+    return descriptions[personaId] || 'Music maker';
+  }
+  
+  getPersonaNeeds(personaId) {
+    const needs = {
+      'bedroom_producer': 'Studio equipment & software',
+      'touring_pro': 'Reliable gear for live shows',
+      'choir_director': 'Live sound & microphones',
+      'studio_engineer': 'Mixing monitors & interfaces'
+    };
+    return needs[personaId] || 'Music gear';
+  }
+  
+  setupKeyboardListener() {
+    this.keyHandler = (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        this.completeStage();
+      }
+    };
+    document.addEventListener('keydown', this.keyHandler);
+  }
+  
+  startTimer() {
+    const updateTimer = () => {
+      const elapsed = Date.now() - this.startTime;
+      const remaining = Math.max(0, this.stageDuration - elapsed);
+      
+      this.game.gameState.timer = remaining / 1000;
+      this.game.updateHUD();
+      
+      if (remaining > 0) {
+        requestAnimationFrame(updateTimer);
+      } else {
+        // Auto-advance if time runs out
+        this.completeStage();
+      }
+    };
+    
+    requestAnimationFrame(updateTimer);
+  }
+  
+  completeStage() {
+    console.log('👤 Wild Customer Stage - Complete!');
+    
+    // Remove keyboard listener
+    document.removeEventListener('keydown', this.keyHandler);
+    
+    // Brief pause then next stage
     setTimeout(() => {
       this.game.nextStage();
-    }, 2000);
+    }, 1000);
+  }
+  
+  handleKeyPress(e) {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      this.completeStage();
+    }
   }
 }
 
