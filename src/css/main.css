@@ -1,0 +1,169 @@
+/* Sweetwater Arcade - Main Styles */
+:root {
+  --sw-blue: #1d4ed8;
+  --sw-gold: #ffd700;
+  --sw-bg: #0b0b0f;
+  --sw-fg: #ffffff;
+  --sw-gray: #6b7280;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Courier New', monospace;
+  background: var(--sw-bg);
+  color: var(--sw-fg);
+  overflow: hidden;
+  height: 100vh;
+}
+
+.game-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title Screen Styles */
+.title-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, var(--sw-bg) 0%, var(--sw-blue) 100%);
+  position: relative;
+}
+
+.title-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230b0b0f"/><rect x="10" y="10" width="80" height="80" fill="%231d4ed8" opacity="0.1"/></svg>');
+  animation: pixelShift 4s ease-in-out infinite;
+}
+
+@keyframes pixelShift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(2px, 2px); }
+}
+
+.game-title {
+  font-size: 4rem;
+  color: var(--sw-gold);
+  text-shadow: 3px 3px 0px #000, 0 0 20px var(--sw-gold);
+  margin-bottom: 2rem;
+  animation: glow 2s ease-in-out infinite alternate;
+  z-index: 1;
+}
+
+@keyframes glow {
+  from { text-shadow: 3px 3px 0px #000, 0 0 20px var(--sw-gold); }
+  to { text-shadow: 3px 3px 0px #000, 0 0 30px var(--sw-gold), 0 0 40px var(--sw-gold); }
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 1;
+}
+
+.menu-item {
+  background: var(--sw-blue);
+  color: var(--sw-fg);
+  border: 2px solid var(--sw-gold);
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.menu-item:hover {
+  background: var(--sw-gold);
+  color: var(--sw-bg);
+  transform: scale(1.05);
+}
+
+.menu-item:active {
+  transform: scale(0.95);
+}
+
+/* Hidden by default */
+.game-screen {
+  display: none;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(29, 78, 216, 0.8);
+  border-bottom: 2px solid var(--sw-gold);
+}
+
+.hud-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.timer {
+  color: var(--sw-gold);
+}
+
+.awareness-bar {
+  width: 200px;
+  height: 20px;
+  background: var(--sw-gray);
+  border: 2px solid var(--sw-fg);
+  position: relative;
+}
+
+.awareness-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--sw-gold) 0%, #ffed4e 100%);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.score {
+  color: var(--sw-gold);
+}
+
+.game-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--sw-bg);
+  position: relative;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .game-title {
+    font-size: 2.5rem;
+  }
+  
+  .menu-item {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+}
