@@ -411,14 +411,300 @@ class WildCustomerStage {
 class SalesStage {
   constructor(game) {
     this.game = game;
+    this.stageDuration = 60000; // 60 seconds
+    this.startTime = 0;
+    
+    // Snake game properties
+    this.boardWidth = 20;
+    this.boardHeight = 12;
+    this.snake = [];
+    this.direction = { x: 1, y: 0 };
+    this.nextDirection = { x: 1, y: 0 };
+    this.pickup = null;
+    this.gameRunning = false;
+    this.gameSpeed = 200; // milliseconds between moves
+    this.gameLoop = null;
+    
+    // Persona-based pickups
+    this.personaPickups = {
+      'bedroom_producer': ['🎛️', '🎧', '💻', '🎹'],
+      'touring_pro': ['🎸', '🎤', '🔌', '📻'],
+      'choir_director': ['🎤', '📢', '🎵', '🎼'],
+      'studio_engineer': ['🎛️', '🔊', '📡', '🎚️']
+    };
+    
+    this.neutralPickups = ['🎵', '🎶', '🎼', '🎤'];
   }
   
   start() {
     console.log('🛒 Sales Stage (Snake) - Starting...');
-    // TODO: Implement Snake game
+    this.startTime = Date.now();
+    
+    // Create snake game content
+    const stageContent = document.getElementById('stage-content');
+    stageContent.innerHTML = `
+      <div class="sales-stage">
+        <div class="snake-game-container">
+          <h2 class="snake-title">🛒 Sales Department</h2>
+          <div class="snake-board" id="snake-board"></div>
+          <div class="game-info">
+            <div>Length: <span id="snake-length">3</span></div>
+            <div>Preferred: <span id="preferred-count">0</span></div>
+            <div>Neutral: <span id="neutral-count">0</span></div>
+          </div>
+          <div class="controls">
+            Use <kbd>WASD</kbd> or <kbd>Arrow Keys</kbd> to move
+          </div>
+          <div class="game-over" id="game-over">
+            <h3>Game Over!</h3>
+            <p>You helped the customer find some gear!</p>
+            <div class="ceo-rescue">
+              CEO: "Great job! Let's keep helping customers!"
+            </div>
+            <p>Press <kbd>SPACE</kbd> to continue</p>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    this.initSnakeGame();
+    this.startTimer();
+    this.setupKeyboardListener();
+  }
+  
+  initSnakeGame() {
+    // Initialize snake in center
+    this.snake = [
+      { x: 10, y: 6 },
+      { x: 9, y: 6 },
+      { x: 8, y: 6 }
+    ];
+    
+    this.direction = { x: 1, y: 0 };
+    this.nextDirection = { x: 1, y: 0 };
+    
+    this.renderBoard();
+    this.spawnPickup();
+    this.startGameLoop();
+  }
+  
+  renderBoard() {
+    const board = document.getElementById('snake-board');
+    board.innerHTML = '';
+    
+    // Create grid cells
+    for (let y = 0; y < this.boardHeight; y++) {
+      for (let x = 0; x < this.boardWidth; x++) {
+        const cell = document.createElement('div');
+        cell.dataset.x = x;
+        cell.dataset.y = y;
+        
+        // Check if this cell has snake
+        const snakeSegment = this.snake.find(segment => segment.x === x && segment.y === y);
+        if (snakeSegment) {
+          if (snakeSegment === this.snake[0]) {
+            cell.classList.add('snake-head');
+          } else {
+            cell.classList.add('snake-segment');
+          }
+        }
+        
+        // Check if this cell has pickup
+        if (this.pickup && this.pickup.x === x && this.pickup.y === y) {
+          cell.classList.add('pickup');
+          if (this.pickup.preferred) {
+            cell.classList.add('pickup-preferred');
+          }
+        }
+        
+        board.appendChild(cell);
+      }
+    }
+  }
+  
+  spawnPickup() {
+    let x, y;
+    do {
+      x = Math.floor(Math.random() * this.boardWidth);
+      y = Math.floor(Math.random() * this.boardHeight);
+    } while (this.snake.some(segment => segment.x === x && segment.y === y));
+    
+    // 30% chance for preferred pickup
+    const isPreferred = Math.random() < 0.3;
+    const persona = this.game.gameState.currentPersona;
+    
+    let emoji;
+    if (isPreferred && persona) {
+      const personaEmojis = this.personaPickups[persona.personaId] || this.neutralPickups;
+      emoji = personaEmojis[Math.floor(Math.random() * personaEmojis.length)];
+    } else {
+      emoji = this.neutralPickups[Math.floor(Math.random() * this.neutralPickups.length)];
+    }
+    
+    this.pickup = { x, y, preferred: isPreferred, emoji };
+  }
+  
+  startGameLoop() {
+    this.gameRunning = true;
+    this.gameLoop = setInterval(() => {
+      this.updateSnake();
+    }, this.gameSpeed);
+  }
+  
+  updateSnake() {
+    if (!this.gameRunning) return;
+    
+    // Update direction
+    this.direction = { ...this.nextDirection };
+    
+    // Move head
+    const head = { ...this.snake[0] };
+    head.x += this.direction.x;
+    head.y += this.direction.y;
+    
+    // Check wall collision
+    if (head.x < 0 || head.x >= this.boardWidth || head.y < 0 || head.y >= this.boardHeight) {
+      this.gameOver();
+      return;
+    }
+    
+    // Check self collision
+    if (this.snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+      this.gameOver();
+      return;
+    }
+    
+    this.snake.unshift(head);
+    
+    // Check pickup collision
+    if (this.pickup && head.x === this.pickup.x && head.y === this.pickup.y) {
+      this.collectPickup();
+    } else {
+      // Remove tail if no pickup collected
+      this.snake.pop();
+    }
+    
+    this.renderBoard();
+    this.updateGameInfo();
+  }
+  
+  collectPickup() {
+    const points = this.pickup.preferred ? 100 : 25;
+    this.game.addScore(points);
+    
+    // Update awareness for preferred pickups
+    if (this.pickup.preferred) {
+      this.game.updateAwareness(0.1);
+    }
+    
+    // Update counters
+    const preferredCount = document.getElementById('preferred-count');
+    const neutralCount = document.getElementById('neutral-count');
+    
+    if (this.pickup.preferred) {
+      preferredCount.textContent = parseInt(preferredCount.textContent) + 1;
+    } else {
+      neutralCount.textContent = parseInt(neutralCount.textContent) + 1;
+    }
+    
+    this.spawnPickup();
+    
+    // Increase speed slightly
+    if (this.gameSpeed > 100) {
+      this.gameSpeed -= 5;
+      clearInterval(this.gameLoop);
+      this.startGameLoop();
+    }
+  }
+  
+  updateGameInfo() {
+    document.getElementById('snake-length').textContent = this.snake.length;
+  }
+  
+  gameOver() {
+    this.gameRunning = false;
+    clearInterval(this.gameLoop);
+    
+    // Show game over screen
+    document.getElementById('game-over').style.display = 'block';
+    
+    // Setup space key to continue
+    this.gameOverKeyHandler = (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        this.completeStage();
+      }
+    };
+    document.addEventListener('keydown', this.gameOverKeyHandler);
+  }
+  
+  setupKeyboardListener() {
+    this.keyHandler = (e) => {
+      if (!this.gameRunning) return;
+      
+      switch (e.code) {
+        case 'KeyW':
+        case 'ArrowUp':
+          e.preventDefault();
+          if (this.direction.y === 0) this.nextDirection = { x: 0, y: -1 };
+          break;
+        case 'KeyS':
+        case 'ArrowDown':
+          e.preventDefault();
+          if (this.direction.y === 0) this.nextDirection = { x: 0, y: 1 };
+          break;
+        case 'KeyA':
+        case 'ArrowLeft':
+          e.preventDefault();
+          if (this.direction.x === 0) this.nextDirection = { x: -1, y: 0 };
+          break;
+        case 'KeyD':
+        case 'ArrowRight':
+          e.preventDefault();
+          if (this.direction.x === 0) this.nextDirection = { x: 1, y: 0 };
+          break;
+      }
+    };
+    document.addEventListener('keydown', this.keyHandler);
+  }
+  
+  startTimer() {
+    const updateTimer = () => {
+      const elapsed = Date.now() - this.startTime;
+      const remaining = Math.max(0, this.stageDuration - elapsed);
+      
+      this.game.gameState.timer = remaining / 1000;
+      this.game.updateHUD();
+      
+      if (remaining > 0) {
+        requestAnimationFrame(updateTimer);
+      } else {
+        // Time's up - end stage
+        this.completeStage();
+      }
+    };
+    
+    requestAnimationFrame(updateTimer);
+  }
+  
+  completeStage() {
+    console.log('🛒 Sales Stage - Complete!');
+    
+    // Clean up
+    if (this.gameLoop) clearInterval(this.gameLoop);
+    document.removeEventListener('keydown', this.keyHandler);
+    if (this.gameOverKeyHandler) {
+      document.removeEventListener('keydown', this.gameOverKeyHandler);
+    }
+    
+    // Brief pause then next stage
     setTimeout(() => {
       this.game.nextStage();
-    }, 5000);
+    }, 1000);
+  }
+  
+  handleKeyPress(e) {
+    // Handled by setupKeyboardListener
   }
 }
 
